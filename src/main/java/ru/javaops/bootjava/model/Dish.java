@@ -23,10 +23,6 @@ public class Dish extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
-    @Column(name = "date", nullable = false)
-    private LocalDate date;
-
     @Column(name = "price", nullable = false)
     @Range(min = 10, max = 100000)
     private int price;

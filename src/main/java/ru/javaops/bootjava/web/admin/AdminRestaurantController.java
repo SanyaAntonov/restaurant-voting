@@ -1,4 +1,4 @@
-package ru.javaops.bootjava.web;
+package ru.javaops.bootjava.web.admin;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.bootjava.model.Restaurant;
 import ru.javaops.bootjava.repository.RestaurantRepository;
-import ru.javaops.bootjava.util.ValidationUtil;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/v1/restaurant")
 @AllArgsConstructor
 @Slf4j
-@Tag(name = "Restaurant Controller")
+@Tag(name = "Admin Restaurant Controller")
 public class AdminRestaurantController {
 
     private final RestaurantRepository repository;
@@ -24,7 +23,7 @@ public class AdminRestaurantController {
     @GetMapping("{id}")
     public ResponseEntity<Restaurant> get(@PathVariable("id") int id) {
         log.info("get restaurant {}", id);
-        Restaurant found = repository.findById(id).orElse(null);
+        Restaurant found = repository.get(id);
         if (found == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -55,6 +54,7 @@ public class AdminRestaurantController {
     }
 
     @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Restaurant> update(@RequestBody Restaurant restaurant,
                                              @PathVariable("id") int id) {
         log.info("update restaurant {}", id);

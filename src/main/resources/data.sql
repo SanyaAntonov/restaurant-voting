@@ -10,3 +10,11 @@ INSERT INTO RESTAURANT (TITLE, ADDRESS)
 VALUES
        ('MacDonalds', 'Ulica durakov 229'),
        ('BurgerKing', 'Ulica durasv 229');
+INSERT INTO DISH (name , PRICE, RESTAURANT_ID)
+VALUES
+       ('ChikenBurger', 50, 2),
+       ('BigMac', 130, 1),
+       ('ChickenMacNuggets', 90, 1),
+       ('BigTasty', 230, 1),
+       ('GrillBurger', 50, 2),
+       ('Vopper', 220, 2);
