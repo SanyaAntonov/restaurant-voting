@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaops.bootjava.UserTestUtil.*;
 import static ru.javaops.bootjava.util.JsonUtil.writeValue;
-import static ru.javaops.bootjava.web.AccountController.URL;
 
 class AccountControllerTest extends AbstractControllerTest {
 
@@ -26,7 +25,7 @@ class AccountControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(URL))
+        perform(MockMvcRequestBuilders.get("/api/account"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_VALUE))
@@ -35,14 +34,14 @@ class AccountControllerTest extends AbstractControllerTest {
 
     @Test
     void getUnAuth() throws Exception {
-        perform(MockMvcRequestBuilders.get(URL))
+        perform(MockMvcRequestBuilders.get("/api/account"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(URL))
+        perform(MockMvcRequestBuilders.delete("/api/account"))
                 .andExpect(status().isNoContent());
         Assertions.assertFalse(userRepository.findById(USER_ID).isPresent());
         Assertions.assertTrue(userRepository.findById(ADMIN_ID).isPresent());
@@ -51,7 +50,7 @@ class AccountControllerTest extends AbstractControllerTest {
     @Test
     void register() throws Exception {
         User newUser = UserTestUtil.getNew();
-        User registered = asUser(perform(MockMvcRequestBuilders.post(URL + "/register")
+        User registered = asUser(perform(MockMvcRequestBuilders.post("/api/account/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newUser)))
                 .andExpect(status().isCreated()).andReturn());
@@ -65,7 +64,7 @@ class AccountControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
         User updated = UserTestUtil.getUpdated();
-        perform(MockMvcRequestBuilders.put(URL)
+        perform(MockMvcRequestBuilders.put("/api/account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updated)))
                 .andDo(print())

@@ -1,4 +1,4 @@
-package ru.javaops.bootjava.web;
+package ru.javaops.bootjava.web.user;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -36,12 +36,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
  * RequestMapping("/${spring.data.rest.basePath}/account") give "Not enough variable values"
  */
 @RestController
-@RequestMapping(AccountController.URL)
+@RequestMapping("/api/account")
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "Account Controller")
 public class AccountController implements RepresentationModelProcessor<RepositoryLinksResource> {
-    static final String URL = "/api/account";
 
     @SuppressWarnings("unchecked")
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -56,7 +55,7 @@ public class AccountController implements RepresentationModelProcessor<Repositor
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public EntityModel<User> get(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("get {}", authUser);
+        log.info("get User {}", authUser);
         return ASSEMBLER.toModel(authUser.getUser());
     }
 

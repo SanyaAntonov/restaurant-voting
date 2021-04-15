@@ -2,10 +2,11 @@ package ru.javaops.bootjava.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Entity
 @Table(name = "restaurant")
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class Restaurant extends BaseEntity{
+public class Restaurant extends BaseEntity {
     @Column(name = "title", nullable = false)
     @Size(min = 2, max = 50)
     @NotBlank
@@ -24,8 +25,4 @@ public class Restaurant extends BaseEntity{
     @Size(min = 2, max = 200)
     @NotBlank
     private String address;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="restaurant")
-    @OrderBy("date DESC")
-    private List<Dish> dishes;
 }

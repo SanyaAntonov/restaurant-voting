@@ -31,9 +31,8 @@ public class Dish extends BaseEntity {
     @Range(min = 10, max = 100000)
     private int price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
     @NotNull
     private Restaurant restaurant;
 }
