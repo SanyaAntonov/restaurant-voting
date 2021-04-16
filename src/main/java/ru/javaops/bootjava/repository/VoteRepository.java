@@ -12,9 +12,12 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface VoteRepository extends JpaRepository<Vote, Integer> {
+    @Query("select v from Vote v WHERE v.user.id=:userId and v.id=:voteId")
+    Optional<Vote> getVoteById(@Param("userId") int userId, @Param("voteId") int voteId);
+
     @Query("SELECT v FROM Vote v WHERE v.user.id=:userId AND v.date=:date")
     Optional<Vote> getUserVoteByDate(@Param("userId") int userId, @Param("date") LocalDate date);
 
     @Query("SELECT v from Vote v WHERE v.user.id=:userId ORDER BY v.date DESC")
-    Optional<List<Vote>> getVotesHistory(@Param("userId") int userId);
+    Optional<List<Vote>> getVotingHistory(@Param("userId") int userId);
 }

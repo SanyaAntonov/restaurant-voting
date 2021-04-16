@@ -18,3 +18,7 @@ VALUES
        ('BigTasty', 230, 1),
        ('GrillBurger', 50, 2),
        ('Vopper', 220, 2);
+INSERT INTO VOTE (DATE ,user_id, restaurant_id)
+VALUES
+    (TO_DATE('14/04/2021', 'DD/MM/YYYY'), 1, 1),
+    (TO_DATE('15/04/2021', 'DD/MM/YYYY'), 1, 2);
