@@ -7,12 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.bootjava.model.Restaurant;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
     @Query("SELECT r FROM Restaurant r ORDER BY r.title")
-    List<Restaurant> getAll();
+    Optional<List<Restaurant>> getAll();
 
     @Query("SELECT r FROM Restaurant r WHERE r.id=:id")
-    Restaurant get(@Param("id") int id);
+    Optional<Restaurant> get(@Param("id") int id);
 }

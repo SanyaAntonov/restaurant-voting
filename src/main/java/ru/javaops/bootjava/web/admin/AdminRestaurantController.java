@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.webjars.NotFoundException;
 import ru.javaops.bootjava.model.Restaurant;
 import ru.javaops.bootjava.repository.RestaurantRepository;
 
@@ -23,33 +24,35 @@ public class AdminRestaurantController {
     @GetMapping("{id}")
     public ResponseEntity<Restaurant> get(@PathVariable("id") int id) {
         log.info("get restaurant {}", id);
-        Restaurant found = repository.get(id);
-        if (found == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Restaurant found = repository.get(id)
+                .orElseThrow(()-> new NotFoundException("Restaurant not found"));
+
         return new ResponseEntity<>(found, HttpStatus.OK);
     }
     @GetMapping
     public ResponseEntity<List<Restaurant>> getAll() {
         log.info("get all restaurants");
-        List<Restaurant> all = repository.getAll();
-        if (all == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        List<Restaurant> all = repository.getAll()
+                .orElseThrow(()-> new NotFoundException("Restaurants not found"));
+
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") int id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         log.info("delete restaurant {}", id);
-        repository.deleteById(id);
+        Restaurant found = repository.get(id)
+                .orElseThrow(()-> new NotFoundException("Restaurant not found"));
+
+        repository.delete(found);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
         log.info("create restaurant {}", restaurant);
         Restaurant created = repository.save(restaurant);
+
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 

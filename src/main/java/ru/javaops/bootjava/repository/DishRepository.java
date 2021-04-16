@@ -7,13 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.bootjava.model.Dish;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface DishRepository extends JpaRepository<Dish, Integer> {
-    @Query("select d from Dish d where d.restaurant.id=:id")
-    List<Dish> getAll(@Param("id") int id);
+    @Query("select d from Dish d where d.restaurant.id=:id order by d.price")
+    Optional<List<Dish>> getAllByRestaurant(@Param("id") int id);
 
     @Query("select d from Dish d where d.restaurant.id=:restId and d.id=:id")
-    Dish get(@Param("restId") int restId, @Param("id") int id);
+    Optional<Dish> get(@Param("restId") int restId, @Param("id") int id);
 
 }

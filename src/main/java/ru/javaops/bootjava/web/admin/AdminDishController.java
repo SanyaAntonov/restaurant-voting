@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.webjars.NotFoundException;
 import ru.javaops.bootjava.model.Dish;
 import ru.javaops.bootjava.model.Restaurant;
 import ru.javaops.bootjava.repository.DishRepository;
@@ -24,34 +25,30 @@ public class AdminDishController {
 
     @GetMapping
     public ResponseEntity<List<Dish>> getAll(@PathVariable("restId") int id) {
-        log.info("get all dishes");
-        List<Dish> all = dishRepository.getAll(id);
-        if (all == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        log.info("get all dishes by restaurant");
+        List<Dish> all = dishRepository.getAllByRestaurant(id)
+                .orElseThrow(()-> new NotFoundException("Dishes not found"));
+
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Dish> getById(@PathVariable("restId") int restId,
                                         @PathVariable("id") int id) {
-        Dish dish = dishRepository.get(restId, id);
-        if (dish == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        log.info("get dish {}", id);
+        Dish dish = dishRepository.get(restId, id)
+                .orElseThrow(()-> new NotFoundException("Dish not found"));
 
         return new ResponseEntity<>(dish, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> delete(@PathVariable("restId") int restId,
                        @PathVariable("id") int id) {
+        log.info("delete dish {}", id);
+        Dish dish = dishRepository.get(restId, id)
+                .orElseThrow(()-> new NotFoundException("Dish not found"));
 
-        Dish dish = dishRepository.get(restId, id);
-        if (dish == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         dishRepository.delete(dish);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -59,10 +56,10 @@ public class AdminDishController {
     @PostMapping
     public ResponseEntity<Dish> create(@RequestBody Dish dish,
                                        @PathVariable("restId") int restId) {
-        Restaurant restaurant = restRepository.findById(restId).orElse(null);
-        if (restaurant == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        log.info("create dish {}", dish);
+        Restaurant restaurant = restRepository.findById(restId)
+                .orElseThrow(()-> new NotFoundException("Restaurant not found"));
+
         dish.setRestaurant(restaurant);
         Dish created = dishRepository.save(dish);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -72,14 +69,13 @@ public class AdminDishController {
     public ResponseEntity<Dish> update (@RequestBody Dish newDish,
                         @PathVariable("restId") int restId,
                         @PathVariable("id") int id) {
-        Dish oldDish = dishRepository.get(restId, id);
-        if (oldDish == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Restaurant restaurant = restRepository.findById(restId).orElse(null);
-        if (restaurant == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        log.info("update dish {}", id);
+        Dish oldDish = dishRepository.get(restId, id)
+                .orElseThrow(()-> new NotFoundException("Dish not found"));
+
+        Restaurant restaurant = restRepository.findById(restId)
+                .orElseThrow(()-> new NotFoundException("Restaurant not found"));
+
         newDish.setRestaurant(restaurant);
         newDish.setId(oldDish.id());
         Dish update = dishRepository.save(newDish);
