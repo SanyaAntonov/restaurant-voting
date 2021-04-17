@@ -14,11 +14,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString(callSuper = true)
 public class Vote extends BaseEntity {
-    public Vote(Integer id, LocalDate date, @NotNull User user, @NotNull Restaurant restaurant) {
-        this(date, user, restaurant);
-        this.id = id;
-    }
-
     @Column(name = "date", unique = true)
     private LocalDate date;
     @ManyToOne

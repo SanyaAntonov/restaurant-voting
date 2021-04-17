@@ -17,10 +17,11 @@ public class AppConfig {
         return Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082");
     }
 */
-
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server h2Server() throws SQLException {
         log.info("Start H2 TCP server");
         return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
     }
+
+
 }
