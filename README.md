@@ -1,4 +1,4 @@
-**REST / Spring Boot / JPA / H2 / Lombok**
+**REST / Spring Boot / Security / JPA / H2 / Lombok**
 ##
 **Graduation Project**
 ##
