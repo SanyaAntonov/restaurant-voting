@@ -52,7 +52,7 @@ public class AccountVoteControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE));
     }
 
-    // Works only if your LocalTime before 11 a.m.!
+    // Works only if your ZonedDateTime before 11 a.m.!
     /*@Test
     @WithUserDetails(value = USER_MAIL)
     void create() throws Exception {

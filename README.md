@@ -40,7 +40,7 @@ Each restaurant provides new menu each day.
 
 **3. Run your program.**
 
-**4. Use Postman to test this API, or swagger ui :**
+**4. Use Swagger UI to test this API :**
 ```sh
   http://localhost:8080/swagger-ui.html#/
 ```
@@ -49,6 +49,8 @@ Each restaurant provides new menu each day.
 Get all Restaurants : curl -s http://localhost:8080/api/v1/restaurant --user admin@gmail.com:admin
 Get all Restaurant dishes : curl -s http://localhost:8080/api/v1/restaurant/1/dish/3 --user admin@gmail.com:admin
 Get voting history : curl -s http://localhost:8080/api/account/history --user user@gmail.com:password
+
+**Works only if your ZonedDateTime is before 11 a.m.**
 Create or update vote : curl -s POST http://localhost:8080/api/account/vote/1 --user user@gmail.com:password
 ```
 ##

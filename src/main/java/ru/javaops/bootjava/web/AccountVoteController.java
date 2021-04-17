@@ -19,7 +19,7 @@ import ru.javaops.bootjava.repository.UserRepository;
 import ru.javaops.bootjava.repository.VoteRepository;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -36,6 +36,7 @@ public class AccountVoteController {
 
     @GetMapping("/vote")
     public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+        log.info("get Restaurants to vote");
         List<Restaurant> restaurants = restaurantRepository.getAll()
                 .orElseThrow(() -> new NotFoundException("Restaurants not found"));
 
@@ -44,6 +45,7 @@ public class AccountVoteController {
 
     @GetMapping("/vote/{restId}")
     public ResponseEntity<List<Dish>> getAllRestaurantDishes(@PathVariable("restId") int id) {
+        log.info("get dish menu for restaurant {}", id);
         List<Dish> dishes = dishRepository.getAllByRestaurant(id)
                 .orElseThrow(() -> new NotFoundException("Dishes not found"));
 
@@ -52,6 +54,7 @@ public class AccountVoteController {
 
     @GetMapping("/history")
     public ResponseEntity<List<Vote>> getVotingHistory(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("get voting history for user{}", authUser.id());
         List<Vote> votingHistory = voteRepository.getVotingHistory(authUser.id())
                 .orElseThrow(() -> new NotFoundException("voting history not found"));
         return new ResponseEntity<>(votingHistory, HttpStatus.OK);
@@ -60,6 +63,7 @@ public class AccountVoteController {
     @GetMapping("/history/{voteId}")
     public ResponseEntity<Vote> getVote(@AuthenticationPrincipal AuthUser authUser,
                                         @PathVariable("voteId") int id) {
+        log.info("get vote in history {}", id);
         Vote voteById = voteRepository.getVoteById(authUser.id(), id)
                 .orElseThrow(() -> new NotFoundException("Vote not found"));
 
@@ -69,11 +73,19 @@ public class AccountVoteController {
     @PostMapping("/vote/{restId}")
     public ResponseEntity<Vote> createOrUpdateVote(@AuthenticationPrincipal AuthUser authUser,
                                                    @PathVariable("restId") int id) {
-        boolean mutable = LocalTime.now().isBefore(LocalTime.of(11, 0));
+        log.info("create or update vote {}", id);
+
+        // If it is after 11:00 then it is too late, vote can't be changed
+        boolean mutable = ZonedDateTime.now().getHour() < 11;
         Vote todaysVote = voteRepository.getUserVoteByDate(authUser.id(), LocalDate.now())
                 .orElse(null);
         if (!mutable) {
-            return new ResponseEntity<>(todaysVote, HttpStatus.METHOD_NOT_ALLOWED);
+            if (todaysVote != null) {
+                log.warn("Your voting time expired");
+                return new ResponseEntity<>(todaysVote, HttpStatus.METHOD_NOT_ALLOWED);
+            }
+            log.warn("Your voting time expired");
+            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
         }
         User user = userRepository.findById(authUser.id())
                 .orElseThrow(() -> new NotFoundException("User not found"));
