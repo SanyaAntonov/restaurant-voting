@@ -40,7 +40,7 @@ Each restaurant provides new menu each day.
 
 **3. Run your program.**
 
-**4. Use Postman to test this API, or swagger ui :**
+**4. Use Swagger UI to test this API :**
 ```sh
   http://localhost:8080/swagger-ui.html#/
 ```
