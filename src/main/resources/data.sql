@@ -8,16 +8,16 @@ VALUES ('USER', 1),
        ('USER', 2);
 INSERT INTO RESTAURANT (TITLE, ADDRESS)
 VALUES
-       ('MacDonalds', 'Ulica durakov 229'),
-       ('BurgerKing', 'Ulica durasv 229');
+       ('MacDonalds', 'Pushkin str'),
+       ('BurgerKing', 'Lomonosov str');
 INSERT INTO DISH (name , PRICE, RESTAURANT_ID)
 VALUES
-       ('ChikenBurger', 50, 2),
+       ('ChickenBurger', 50, 2),
        ('BigMac', 130, 1),
        ('ChickenMacNuggets', 90, 1),
        ('BigTasty', 230, 1),
        ('GrillBurger', 50, 2),
-       ('Vopper', 220, 2);
+       ('DoubleBurger', 220, 2);
 INSERT INTO VOTE (DATE ,user_id, restaurant_id)
 VALUES
     (TO_DATE('14/04/2021', 'DD/MM/YYYY'), 1, 1),

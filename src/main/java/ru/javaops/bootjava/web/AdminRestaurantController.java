@@ -1,4 +1,4 @@
-package ru.javaops.bootjava.web.admin;
+package ru.javaops.bootjava.web;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;

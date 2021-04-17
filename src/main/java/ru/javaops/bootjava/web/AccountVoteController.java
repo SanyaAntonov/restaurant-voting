@@ -1,4 +1,4 @@
-package ru.javaops.bootjava.web.user;
+package ru.javaops.bootjava.web;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -68,7 +68,7 @@ public class AccountVoteController {
 
     @PostMapping("/vote/{restId}")
     public ResponseEntity<Vote> createOrUpdateVote(@AuthenticationPrincipal AuthUser authUser,
-                                           @PathVariable("restId") int id) {
+                                                   @PathVariable("restId") int id) {
         boolean mutable = LocalTime.now().isBefore(LocalTime.of(11, 0));
         Vote todaysVote = voteRepository.getUserVoteByDate(authUser.id(), LocalDate.now())
                 .orElse(null);

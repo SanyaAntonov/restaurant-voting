@@ -1,4 +1,4 @@
-package ru.javaops.bootjava.web.admin;
+package ru.javaops.bootjava.web;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class AdminDishController {
     public ResponseEntity<List<Dish>> getAll(@PathVariable("restId") int id) {
         log.info("get all dishes by restaurant");
         List<Dish> all = dishRepository.getAllByRestaurant(id)
-                .orElseThrow(()-> new NotFoundException("Dishes not found"));
+                .orElseThrow(() -> new NotFoundException("Dishes not found"));
 
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
@@ -37,17 +37,17 @@ public class AdminDishController {
                                         @PathVariable("id") int id) {
         log.info("get dish {}", id);
         Dish dish = dishRepository.get(restId, id)
-                .orElseThrow(()-> new NotFoundException("Dish not found"));
+                .orElseThrow(() -> new NotFoundException("Dish not found"));
 
         return new ResponseEntity<>(dish, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable("restId") int restId,
-                       @PathVariable("id") int id) {
+                                       @PathVariable("id") int id) {
         log.info("delete dish {}", id);
         Dish dish = dishRepository.get(restId, id)
-                .orElseThrow(()-> new NotFoundException("Dish not found"));
+                .orElseThrow(() -> new NotFoundException("Dish not found"));
 
         dishRepository.delete(dish);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -58,7 +58,7 @@ public class AdminDishController {
                                        @PathVariable("restId") int restId) {
         log.info("create dish {}", dish);
         Restaurant restaurant = restRepository.findById(restId)
-                .orElseThrow(()-> new NotFoundException("Restaurant not found"));
+                .orElseThrow(() -> new NotFoundException("Restaurant not found"));
 
         dish.setRestaurant(restaurant);
         Dish created = dishRepository.save(dish);
@@ -66,15 +66,15 @@ public class AdminDishController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Dish> update (@RequestBody Dish newDish,
-                        @PathVariable("restId") int restId,
-                        @PathVariable("id") int id) {
+    public ResponseEntity<Dish> update(@RequestBody Dish newDish,
+                                       @PathVariable("restId") int restId,
+                                       @PathVariable("id") int id) {
         log.info("update dish {}", id);
         Dish oldDish = dishRepository.get(restId, id)
-                .orElseThrow(()-> new NotFoundException("Dish not found"));
+                .orElseThrow(() -> new NotFoundException("Dish not found"));
 
         Restaurant restaurant = restRepository.findById(restId)
-                .orElseThrow(()-> new NotFoundException("Restaurant not found"));
+                .orElseThrow(() -> new NotFoundException("Restaurant not found"));
 
         newDish.setRestaurant(restaurant);
         newDish.setId(oldDish.id());
