@@ -81,10 +81,10 @@ public class AccountVoteController {
                 .orElse(null);
         if (!mutable) {
             if (todaysVote != null) {
-                log.warn("Your voting time expired");
+                log.info("You have already voted today, and your time to vote is up, try again tomorrow");
                 return new ResponseEntity<>(todaysVote, HttpStatus.METHOD_NOT_ALLOWED);
             }
-            log.warn("Your voting time expired");
+            log.info("Your time to vote is up, try again tomorrow");
             return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
         }
         User user = userRepository.findById(authUser.id())
