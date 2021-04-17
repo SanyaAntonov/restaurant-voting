@@ -18,7 +18,7 @@ import static ru.javaops.bootjava.UserTestUtil.*;
 import static ru.javaops.bootjava.util.JsonUtil.writeValue;
 
 class UserControllerTest extends AbstractControllerTest {
-    static final String URL = "/api/users/";
+    static final String URL = "/api/v1/users/";
 
     @Autowired
     private UserRepository userRepository;

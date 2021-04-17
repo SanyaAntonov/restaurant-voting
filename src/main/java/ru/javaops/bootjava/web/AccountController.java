@@ -36,7 +36,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
  * RequestMapping("/${spring.data.rest.basePath}/account") give "Not enough variable values"
  */
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping("/api/v1/account")
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "Account Controller")
@@ -91,14 +91,6 @@ public class AccountController implements RepresentationModelProcessor<Repositor
         }
         userRepository.save(user);
     }
-
-/*
-    @GetMapping(value = "/pageDemo", produces = MediaTypes.HAL_JSON_VALUE)
-    public PagedModel<EntityModel<User>> pageDemo(Pageable page, PagedResourcesAssembler<User> pagedAssembler) {
-        Page<User> users = userRepository.findAll(page);
-        return pagedAssembler.toModel(users, ASSEMBLER);
-    }
-*/
 
     @Override
     public RepositoryLinksResource process(RepositoryLinksResource resource) {

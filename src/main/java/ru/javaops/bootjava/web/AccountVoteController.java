@@ -23,7 +23,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping("/api/v1/account")
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "Vote Controller")
