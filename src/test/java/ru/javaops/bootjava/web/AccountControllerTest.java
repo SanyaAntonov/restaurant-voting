@@ -1,6 +1,5 @@
 package ru.javaops.bootjava.web;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
@@ -36,15 +35,6 @@ class AccountControllerTest extends AbstractControllerTest {
     void getUnAuth() throws Exception {
         perform(MockMvcRequestBuilders.get("/api/v1/account"))
                 .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    @WithUserDetails(value = USER_MAIL)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete("/api/v1/account"))
-                .andExpect(status().isNoContent());
-        Assertions.assertFalse(userRepository.findById(USER_ID).isPresent());
-        Assertions.assertTrue(userRepository.findById(ADMIN_ID).isPresent());
     }
 
     @Test

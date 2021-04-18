@@ -1,6 +1,5 @@
 package ru.javaops.bootjava.web;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -41,15 +40,6 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE));
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(URL + MAC_ID))
-                .andExpect(status().isNoContent());
-        Assertions.assertFalse(repository.findById(MAC_ID).isPresent());
-        Assertions.assertTrue(repository.findById(KING_ID).isPresent());
     }
 
     @Test

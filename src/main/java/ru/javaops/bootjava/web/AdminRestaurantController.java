@@ -39,13 +39,6 @@ public class AdminRestaurantController {
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") int id) {
-        log.info("delete restaurant {}", id);
-        repository.deleteById(id);
-    }
-
     @PostMapping
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
         log.info("create restaurant {}", restaurant);
