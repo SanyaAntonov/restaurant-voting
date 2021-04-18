@@ -14,8 +14,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class RestaurantTestUtil {
     public static final int MAC_ID = 1;
+    public static final int KING_ID = 2;
     public static final String MAC_DONALDS = "MacDonalds";
+    public static final String BURGER_KING = "BurgerKing";
     public static final Restaurant macDonalds = new Restaurant(MAC_ID, MAC_DONALDS, "Pushkin str");
+    public static final Restaurant burgerKing = new Restaurant(KING_ID, BURGER_KING, "Lomonosov str");
 
     public static Restaurant getNew() {
         return new Restaurant(null, "New Restaurant", "New Address");
