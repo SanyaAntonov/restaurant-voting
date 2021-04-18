@@ -40,11 +40,18 @@ Each restaurant provides new menu each day.
 
 **3. Run your program.**
 
-**4. Use Swagger UI to test this API :**
+**4.(Optional) Connect to H2 database in the IDE to see all changes with parameters :**
+```sh
+  URL: jdbc:h2:tcp://localhost:9092/mem:voting
+  User: sa
+  Password:
+```
+
+**5. Use Swagger UI to test this API :**
 ```sh
   http://localhost:8080/swagger-ui.html#/
 ```
-**5. Some curl commands :**
+**6. Some curl commands :**
 ```sh
 Get all Restaurants : curl -s http://localhost:8080/api/v1/restaurant --user admin@gmail.com:admin
 Get all Restaurant dishes : curl -s http://localhost:8080/api/v1/restaurant/1/dish/3 --user admin@gmail.com:admin
