@@ -26,6 +26,7 @@ public class Dish extends BaseEntity {
     @Range(min = 10, max = 100000)
     private int price;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "restaurant_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
