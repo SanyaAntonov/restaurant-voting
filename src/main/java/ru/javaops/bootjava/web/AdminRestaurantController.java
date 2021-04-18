@@ -25,15 +25,16 @@ public class AdminRestaurantController {
     public ResponseEntity<Restaurant> get(@PathVariable("id") int id) {
         log.info("get restaurant {}", id);
         Restaurant found = repository.get(id)
-                .orElseThrow(()-> new NotFoundException("Restaurant not found"));
+                .orElseThrow(() -> new NotFoundException("Restaurant not found"));
 
         return new ResponseEntity<>(found, HttpStatus.OK);
     }
+
     @GetMapping
     public ResponseEntity<List<Restaurant>> getAll() {
         log.info("get all restaurants");
         List<Restaurant> all = repository.getAll()
-                .orElseThrow(()-> new NotFoundException("Restaurants not found"));
+                .orElseThrow(() -> new NotFoundException("Restaurants not found"));
 
         return new ResponseEntity<>(all, HttpStatus.OK);
     }

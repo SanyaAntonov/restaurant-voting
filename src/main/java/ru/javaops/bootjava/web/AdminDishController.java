@@ -11,7 +11,6 @@ import ru.javaops.bootjava.model.Dish;
 import ru.javaops.bootjava.model.Restaurant;
 import ru.javaops.bootjava.repository.DishRepository;
 import ru.javaops.bootjava.repository.RestaurantRepository;
-import ru.javaops.bootjava.util.ValidationUtil;
 
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class AdminDishController {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("restId") int restId,
-                                       @PathVariable("id") int id) {
+                       @PathVariable("id") int id) {
         log.info("delete dish {}", id);
         dishRepository.deleteById(id);
     }
