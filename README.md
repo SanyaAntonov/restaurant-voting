@@ -1,4 +1,4 @@
-**REST / Spring Boot / JPA / H2 / Lombok**
+**REST / Spring Boot / Security / JPA / H2 / Lombok / Swagger UI**
 ##
 **Graduation Project**
 ##
@@ -49,8 +49,6 @@ Each restaurant provides new menu each day.
 Get all Restaurants : curl -s http://localhost:8080/api/v1/restaurant --user admin@gmail.com:admin
 Get all Restaurant dishes : curl -s http://localhost:8080/api/v1/restaurant/1/dish/3 --user admin@gmail.com:admin
 Get voting history : curl -s http://localhost:8080/api/account/history --user user@gmail.com:password
-
-**Works only if your ZonedDateTime is before 11 a.m.**
 Create or update vote : curl -s POST http://localhost:8080/api/account/vote/1 --user user@gmail.com:password
 ```
 ##
