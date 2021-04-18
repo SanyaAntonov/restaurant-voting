@@ -18,7 +18,7 @@ import static ru.javaops.bootjava.UserTestUtil.*;
 import static ru.javaops.bootjava.util.JsonUtil.writeValue;
 
 class UserControllerTest extends AbstractControllerTest {
-    static final String URL = "/api/v1/users/";
+    static final String URL = "/api/users/";
 
     @Autowired
     private UserRepository userRepository;
@@ -51,13 +51,6 @@ class UserControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_VALUE))
                 .andExpect(jsonMatcher(admin, UserTestUtil::assertNoIdEquals));
-    }
-
-    @Test
-    @WithUserDetails(value = USER_MAIL)
-    void getForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.get(URL))
-                .andExpect(status().isForbidden());
     }
 
     @Test

@@ -25,7 +25,7 @@ class AccountControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get("/api/account"))
+        perform(MockMvcRequestBuilders.get("/api/v1/account"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_VALUE))
@@ -34,14 +34,14 @@ class AccountControllerTest extends AbstractControllerTest {
 
     @Test
     void getUnAuth() throws Exception {
-        perform(MockMvcRequestBuilders.get("/api/account"))
+        perform(MockMvcRequestBuilders.get("/api/v1/account"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete("/api/account"))
+        perform(MockMvcRequestBuilders.delete("/api/v1/account"))
                 .andExpect(status().isNoContent());
         Assertions.assertFalse(userRepository.findById(USER_ID).isPresent());
         Assertions.assertTrue(userRepository.findById(ADMIN_ID).isPresent());
@@ -50,7 +50,7 @@ class AccountControllerTest extends AbstractControllerTest {
     @Test
     void register() throws Exception {
         User newUser = UserTestUtil.getNew();
-        User registered = asUser(perform(MockMvcRequestBuilders.post("/api/account/register")
+        User registered = asUser(perform(MockMvcRequestBuilders.post("/api/v1/account/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newUser)))
                 .andExpect(status().isCreated()).andReturn());
@@ -64,7 +64,7 @@ class AccountControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
         User updated = UserTestUtil.getUpdated();
-        perform(MockMvcRequestBuilders.put("/api/account")
+        perform(MockMvcRequestBuilders.put("/api/v1/account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updated)))
                 .andDo(print())

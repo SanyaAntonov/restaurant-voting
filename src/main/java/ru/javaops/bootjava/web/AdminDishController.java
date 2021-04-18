@@ -11,6 +11,7 @@ import ru.javaops.bootjava.model.Dish;
 import ru.javaops.bootjava.model.Restaurant;
 import ru.javaops.bootjava.repository.DishRepository;
 import ru.javaops.bootjava.repository.RestaurantRepository;
+import ru.javaops.bootjava.util.ValidationUtil;
 
 import java.util.List;
 
@@ -43,14 +44,11 @@ public class AdminDishController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable("restId") int restId,
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("restId") int restId,
                                        @PathVariable("id") int id) {
         log.info("delete dish {}", id);
-        Dish dish = dishRepository.get(restId, id)
-                .orElseThrow(() -> new NotFoundException("Dish not found"));
-
-        dishRepository.delete(dish);
-        return new ResponseEntity<>(HttpStatus.OK);
+        dishRepository.deleteById(id);
     }
 
     @PostMapping
@@ -70,14 +68,12 @@ public class AdminDishController {
                                        @PathVariable("restId") int restId,
                                        @PathVariable("id") int id) {
         log.info("update dish {}", id);
-        Dish oldDish = dishRepository.get(restId, id)
-                .orElseThrow(() -> new NotFoundException("Dish not found"));
 
-        Restaurant restaurant = restRepository.findById(restId)
+        Restaurant restaurant = restRepository.get(restId)
                 .orElseThrow(() -> new NotFoundException("Restaurant not found"));
 
         newDish.setRestaurant(restaurant);
-        newDish.setId(oldDish.id());
+        newDish.setId(id);
         Dish update = dishRepository.save(newDish);
         return new ResponseEntity<>(update, HttpStatus.OK);
     }

@@ -47,7 +47,7 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(URL + BIG_MAC_ID))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         Assertions.assertFalse(repository.findById(BIG_MAC_ID).isPresent());
         Assertions.assertTrue(repository.findById(BIG_TASTY_ID).isPresent());
     }

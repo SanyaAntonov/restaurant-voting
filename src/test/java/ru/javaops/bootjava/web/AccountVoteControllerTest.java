@@ -16,7 +16,7 @@ public class AccountVoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void getVoteFromHistory() throws Exception {
         // TODO check content yourself
-        perform(MockMvcRequestBuilders.get("/api/account/history/1"))
+        perform(MockMvcRequestBuilders.get("/api/v1/account/history/1"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE));
@@ -26,7 +26,7 @@ public class AccountVoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void getAllHistory() throws Exception {
         // TODO check content yourself
-        perform(MockMvcRequestBuilders.get("/api/account/history"))
+        perform(MockMvcRequestBuilders.get("/api/v1/account/history"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE));
@@ -36,7 +36,7 @@ public class AccountVoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void getAllRestaurants() throws Exception {
         // TODO check content yourself
-        perform(MockMvcRequestBuilders.get("/api/account/vote/"))
+        perform(MockMvcRequestBuilders.get("/api/v1/account/vote/"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE));
@@ -46,7 +46,7 @@ public class AccountVoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void getRestaurantDishes() throws Exception {
         // TODO check content yourself
-        perform(MockMvcRequestBuilders.get("/api/account/vote/1"))
+        perform(MockMvcRequestBuilders.get("/api/v1/account/vote/1"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE));

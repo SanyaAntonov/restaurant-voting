@@ -39,13 +39,10 @@ public class AdminRestaurantController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") int id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") int id) {
         log.info("delete restaurant {}", id);
-        Restaurant found = repository.get(id)
-                .orElseThrow(()-> new NotFoundException("Restaurant not found"));
-
-        repository.delete(found);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        repository.deleteById(id);
     }
 
     @PostMapping
