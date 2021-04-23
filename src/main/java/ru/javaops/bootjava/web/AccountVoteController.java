@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 import ru.javaops.bootjava.AuthUser;
@@ -71,6 +72,7 @@ public class AccountVoteController {
     }
 
     @PostMapping("/vote/{restId}")
+    @Transactional
     public ResponseEntity<Vote> createOrUpdateVote(@AuthenticationPrincipal AuthUser authUser,
                                                    @PathVariable("restId") int id) {
         log.info("create or update vote {}", id);

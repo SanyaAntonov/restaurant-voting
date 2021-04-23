@@ -74,7 +74,7 @@ public class AccountController implements RepresentationModelProcessor<Repositor
         user.setRoles(EnumSet.of(Role.USER));
         user = userRepository.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/account")
+                .path("/api/v1/account")
                 .build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(user));
     }

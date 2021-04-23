@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 import ru.javaops.bootjava.model.Dish;
@@ -51,6 +52,7 @@ public class AdminDishController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Dish> create(@RequestBody Dish dish,
                                        @PathVariable("restId") int restId) {
         log.info("create dish {}", dish);
@@ -63,6 +65,7 @@ public class AdminDishController {
     }
 
     @PutMapping("{id}")
+    @Transactional
     public ResponseEntity<Dish> update(@RequestBody Dish newDish,
                                        @PathVariable("restId") int restId,
                                        @PathVariable("id") int id) {

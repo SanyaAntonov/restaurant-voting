@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString(callSuper = true)
 public class Vote extends BaseEntity {
-    @Column(name = "date", unique = true)
+    @Column(name = "date", nullable = false)
     private LocalDate date;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
