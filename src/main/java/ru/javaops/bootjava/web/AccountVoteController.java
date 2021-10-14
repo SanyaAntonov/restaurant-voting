@@ -1,6 +1,5 @@
 package ru.javaops.bootjava.web;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -8,11 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.webjars.NotFoundException;
-import ru.javaops.bootjava.AuthUser;
+import ru.javaops.bootjava.model.AuthUser;
 import ru.javaops.bootjava.model.Dish;
 import ru.javaops.bootjava.model.Restaurant;
-import ru.javaops.bootjava.model.User;
 import ru.javaops.bootjava.model.Vote;
 import ru.javaops.bootjava.repository.DishRepository;
 import ru.javaops.bootjava.repository.RestaurantRepository;
@@ -20,14 +17,13 @@ import ru.javaops.bootjava.repository.UserRepository;
 import ru.javaops.bootjava.repository.VoteRepository;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/account")
 @AllArgsConstructor
 @Slf4j
-@Tag(name = "Vote Controller")
 public class AccountVoteController {
     private final VoteRepository voteRepository;
     private final DishRepository dishRepository;
@@ -36,39 +32,28 @@ public class AccountVoteController {
 
 
     @GetMapping("/vote")
-    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+    public List<Restaurant> getAllRestaurants() {
         log.info("get Restaurants to vote");
-        List<Restaurant> restaurants = restaurantRepository.getAll()
-                .orElseThrow(() -> new NotFoundException("Restaurants not found"));
-
-        return new ResponseEntity<>(restaurants, HttpStatus.OK);
+        return restaurantRepository.findAll();
     }
 
     @GetMapping("/vote/{restId}")
-    public ResponseEntity<List<Dish>> getAllRestaurantDishes(@PathVariable("restId") int id) {
+    public List<Dish> getAllRestaurantDishes(@PathVariable("restId") int id) {
         log.info("get dish menu for restaurant {}", id);
-        List<Dish> dishes = dishRepository.getAllByRestaurant(id)
-                .orElseThrow(() -> new NotFoundException("Dishes not found"));
-
-        return new ResponseEntity<>(dishes, HttpStatus.OK);
+        return dishRepository.getAllByRestaurantIdOrderByPrice(id);
     }
 
     @GetMapping("/history")
-    public ResponseEntity<List<Vote>> getVotingHistory(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("get voting history for user{}", authUser.id());
-        List<Vote> votingHistory = voteRepository.getVotingHistory(authUser.id())
-                .orElseThrow(() -> new NotFoundException("voting history not found"));
-        return new ResponseEntity<>(votingHistory, HttpStatus.OK);
+    public List<Vote> getVotingHistory(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("get voting history for user{}", authUser.getUser());
+        return voteRepository.getVoteByUserOrderByDateDesc(authUser.getUser());
     }
 
     @GetMapping("/history/{voteId}")
-    public ResponseEntity<Vote> getVote(@AuthenticationPrincipal AuthUser authUser,
-                                        @PathVariable("voteId") int id) {
+    public Vote getVote(@AuthenticationPrincipal AuthUser authUser,
+                        @PathVariable("voteId") int id) {
         log.info("get vote in history {}", id);
-        Vote voteById = voteRepository.getVoteById(authUser.id(), id)
-                .orElseThrow(() -> new NotFoundException("Vote not found"));
-
-        return new ResponseEntity<>(voteById, HttpStatus.OK);
+        return voteRepository.getVoteByUserAndId(authUser.getUser(), id);
     }
 
     @PostMapping("/vote/{restId}")
@@ -76,32 +61,19 @@ public class AccountVoteController {
     public ResponseEntity<Vote> createOrUpdateVote(@AuthenticationPrincipal AuthUser authUser,
                                                    @PathVariable("restId") int id) {
         log.info("create or update vote {}", id);
-
         // If it is after 11:00 then it is too late, vote can't be changed
-        boolean mutable = ZonedDateTime.now().getHour() < 11;
-        Vote todaysVote = voteRepository.getUserVoteByDate(authUser.id(), LocalDate.now())
-                .orElse(null);
-        if (!mutable) {
-            if (todaysVote != null) {
-                log.info("You have already voted today, and your time to vote is up, try again tomorrow");
-                return new ResponseEntity<>(todaysVote, HttpStatus.METHOD_NOT_ALLOWED);
-            }
-            log.info("Your time to vote is up, try again tomorrow");
+        if (!LocalTime.now().isBefore(LocalTime.of(11, 0))) {
             return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
         }
-        User user = userRepository.findById(authUser.id())
-                .orElseThrow(() -> new NotFoundException("User not found"));
-        Restaurant restaurant = restaurantRepository.get(id)
-                .orElseThrow(() -> new NotFoundException("Restaurant not found"));
-
-        Vote newVote = new Vote(LocalDate.now(), user, restaurant);
+        Vote todaysVote = voteRepository.getVoteByUserAndDate(authUser.getUser(), LocalDate.now());
+        Vote vote = new Vote();
 
         if (todaysVote != null) {
-            newVote.setId(todaysVote.id());
+            vote.setId(todaysVote.getId());
         }
-
-        Vote saved = voteRepository.save(newVote);
-
-        return new ResponseEntity<>(saved, HttpStatus.OK);
+        vote.setDate(LocalDate.now());
+        vote.setUser(userRepository.getOne(id));
+        vote.setRestaurant(restaurantRepository.getOne(id));
+        return new ResponseEntity<>(voteRepository.save(vote), HttpStatus.OK);
     }
 }

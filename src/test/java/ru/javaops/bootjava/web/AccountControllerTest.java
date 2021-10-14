@@ -1,74 +1,69 @@
 package ru.javaops.bootjava.web;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.javaops.bootjava.UserTestUtil;
+import ru.javaops.bootjava.model.Role;
 import ru.javaops.bootjava.model.User;
-import ru.javaops.bootjava.repository.UserRepository;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javaops.bootjava.UserTestUtil.*;
-import static ru.javaops.bootjava.util.JsonUtil.writeValue;
 
 class AccountControllerTest extends AbstractControllerTest {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get("/api/v1/account"))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_VALUE))
-                .andExpect(jsonMatcher(user, UserTestUtil::assertEquals));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/account"))
+                .andExpect(status().isOk());
     }
 
     @Test
     void getUnAuth() throws Exception {
-        perform(MockMvcRequestBuilders.get("/api/v1/account"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/account"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete("/api/v1/account"))
-                .andExpect(status().isNoContent());
-        Assertions.assertFalse(userRepository.findById(USER_ID).isPresent());
-        Assertions.assertTrue(userRepository.findById(ADMIN_ID).isPresent());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/account"))
+                .andExpect(status().isOk());
     }
 
     @Test
     void register() throws Exception {
-        User newUser = UserTestUtil.getNew();
-        User registered = asUser(perform(MockMvcRequestBuilders.post("/api/v1/account/register")
+        User user = new User();
+        user.setEmail("new@gmail.com");
+        user.setFirstName("New_First");
+        user.setLastName("New_Last");
+        user.setPassword("newpass");
+        user.setRoles(List.of(Role.USER));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/account/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(newUser)))
-                .andExpect(status().isCreated()).andReturn());
-        int newId = registered.id();
-        newUser.setId(newId);
-        UserTestUtil.assertEquals(registered, newUser);
-        UserTestUtil.assertEquals(registered, userRepository.findById(newId).orElseThrow());
+                .content(objectMapper.writeValueAsBytes(user)))
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
-        User updated = UserTestUtil.getUpdated();
-        perform(MockMvcRequestBuilders.put("/api/v1/account")
+        User user = new User();
+        user.setId(USER_ID);
+        user.setEmail("user_update@gmail.com");
+        user.setFirstName("User_First_Update");
+        user.setLastName("User_Last_Update");
+        user.setPassword("password_update");
+        user.setRoles(List.of(Role.USER));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/account")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(updated)))
+                .content(objectMapper.writeValueAsBytes(user)))
                 .andDo(print())
-                .andExpect(status().isNoContent());
-        UserTestUtil.assertEquals(updated, userRepository.findById(USER_ID).orElseThrow());
+                .andExpect(status().isOk());
     }
 }

@@ -12,20 +12,18 @@ import java.time.LocalDate;
 @Table(name = "vote")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@ToString(callSuper = true)
-public class Vote extends BaseEntity {
-    @Column(name = "date", nullable = false)
+public class Vote {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Integer id;
+    @NotNull
     private LocalDate date;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
-    @NotNull
     private User user;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    @NotNull
     private Restaurant restaurant;
 }

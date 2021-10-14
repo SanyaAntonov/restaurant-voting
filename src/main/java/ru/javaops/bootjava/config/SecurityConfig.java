@@ -1,9 +1,7 @@
 package ru.javaops.bootjava.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,29 +13,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.javaops.bootjava.AuthUser;
+import ru.javaops.bootjava.model.AuthUser;
 import ru.javaops.bootjava.model.Role;
 import ru.javaops.bootjava.model.User;
 import ru.javaops.bootjava.repository.UserRepository;
-import ru.javaops.bootjava.util.JsonUtil;
 
-import javax.annotation.PostConstruct;
 import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
 @Slf4j
 @AllArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
-
-    @PostConstruct
-    void setMapper() {
-        JsonUtil.setObjectMapper(objectMapper);
-    }
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -49,10 +38,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
-    @Autowired
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService())
-                .passwordEncoder(PASSWORD_ENCODER);
+                .passwordEncoder(passwordEncoder());
     }
 
     @Override

@@ -2,20 +2,21 @@ package ru.javaops.bootjava.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "restaurant")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@ToString(callSuper = true)
-public class Restaurant extends BaseEntity {
+@NoArgsConstructor
+public class Restaurant implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Integer id;
     @Column(name = "title", nullable = false)
     @Size(min = 2, max = 50)
     @NotBlank
@@ -24,9 +25,4 @@ public class Restaurant extends BaseEntity {
     @Size(min = 2, max = 200)
     @NotBlank
     private String address;
-
-    public Restaurant(Integer id, @Size(min = 2, max = 50) @NotBlank String title, @Size(min = 2, max = 200) @NotBlank String address) {
-        this(title, address);
-        this.id = id;
-    }
 }

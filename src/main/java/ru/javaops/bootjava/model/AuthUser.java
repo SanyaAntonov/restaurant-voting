@@ -1,4 +1,4 @@
-package ru.javaops.bootjava;
+package ru.javaops.bootjava.model;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -14,9 +14,5 @@ public class AuthUser extends org.springframework.security.core.userdetails.User
     public AuthUser(@NonNull User user) {
         super(user.getEmail(), user.getPassword(), user.getRoles());
         this.user = user;
-    }
-
-    public int id() {
-        return user.id();
     }
 }
