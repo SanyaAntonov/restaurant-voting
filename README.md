@@ -1,4 +1,4 @@
-**REST / Spring Boot / Security / JPA / H2 / Lombok / Swagger UI**
+**REST / Spring Boot / Security / JPA / H2 / Lombok **
 ##
 **Graduation Project**
 ##
