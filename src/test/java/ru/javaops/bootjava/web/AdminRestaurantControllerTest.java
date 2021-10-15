@@ -15,13 +15,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AdminRestaurantControllerTest extends AbstractControllerTest {
     private final String URL = "/api/v1/restaurant/";
 
-//    @Test
-//    @Order(1)
-//    @WithUserDetails(value = ADMIN_MAIL)
-//    void get() throws Exception {
-//        mockMvc.perform(MockMvcRequestBuilders.get(URL + MAC_ID))
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    @Order(1)
+    @WithUserDetails(value = ADMIN_MAIL)
+    void get() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + MAC_ID))
+                .andExpect(status().isOk());
+    }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)

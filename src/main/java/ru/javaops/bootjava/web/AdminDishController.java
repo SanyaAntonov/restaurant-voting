@@ -1,8 +1,8 @@
 package ru.javaops.bootjava.web;
 
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.bootjava.model.Dish;
@@ -42,9 +42,10 @@ public class AdminDishController {
     @PostMapping
     @Transactional
     public Dish create(@RequestBody Dish dish,
-                       @PathVariable("restId") int restId) {
+                       @PathVariable("restId") int restId) throws NotFoundException {
         log.info("create dish {}", dish);
-        dish.setRestaurant(restaurantRepository.getOne(restId));
+        dish.setRestaurant(restaurantRepository.findById(restId)
+                .orElseThrow(() -> new NotFoundException("Restaurant not found")));
         return dishRepository.save(dish);
     }
 
@@ -52,9 +53,10 @@ public class AdminDishController {
     @Transactional
     public Dish update(@RequestBody Dish newDish,
                        @PathVariable("restId") int restId,
-                       @PathVariable("id") int id) {
+                       @PathVariable("id") int id) throws NotFoundException {
         log.info("update dish {}", id);
-        newDish.setRestaurant(restaurantRepository.getOne(restId));
+        newDish.setRestaurant(restaurantRepository.findById(restId)
+                .orElseThrow(() -> new NotFoundException("Restaurant not found")));
         newDish.setId(id);
         return dishRepository.save(newDish);
     }

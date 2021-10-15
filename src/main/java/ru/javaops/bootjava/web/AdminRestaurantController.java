@@ -1,8 +1,8 @@
 package ru.javaops.bootjava.web;
 
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.bootjava.model.Restaurant;
 import ru.javaops.bootjava.repository.RestaurantRepository;
@@ -18,9 +18,10 @@ public class AdminRestaurantController {
     private final RestaurantRepository restaurantRepository;
 
     @GetMapping("{id}")
-    public Restaurant get(@PathVariable("id") int id) {
+    public Restaurant get(@PathVariable("id") int id) throws NotFoundException {
         log.info("get restaurant {}", id);
-        return restaurantRepository.getOne(id);
+        return restaurantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Restaurant not found"));
     }
 
     @GetMapping
